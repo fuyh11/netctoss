@@ -2,6 +2,7 @@ package dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,12 +45,41 @@ public class CostDao implements Serializable {
 		}
 	}
 
+	public void save(Cost cost) {
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "insert into cost values(null,?,?,?,?,'1',?,CURRENT_TIMESTAMP,null,?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, cost.getName());
+			// setInt,setDouble不允许传入null,
+			// 但实际业务中该字段却是可能为null,
+			// 并且数据库也支持为null,可以将
+			// 这样的字段当做Object处理
+			ps.setObject(2, cost.getBaseDuration());
+			ps.setObject(3, cost.getBaseCost());
+			ps.setObject(4, cost.getUnitCost());
+			ps.setString(5, cost.getDescr());
+			ps.setString(6, cost.getCostType());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("增加资费失败", e);
+		} finally {
+			DBUtil.close(conn);
+		}
+	}
+
 	public static void main(String[] args) {
 		CostDao dao = new CostDao();
-		List<Cost> list = dao.findAll();
-		for (Cost c : list) {
-			System.out.println(c.getCostId() + "," + c.getName());
-		}
+		Cost cost = new Cost();
+		cost.setName("包月");
+		cost.setBaseDuration(660);
+		cost.setBaseCost(1200.0);
+		cost.setUnitCost(0.6);
+		cost.setDescr("包月最爽");
+		cost.setCostType("1");
+		dao.save(cost);
 	}
 
 }
