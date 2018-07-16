@@ -1,4 +1,5 @@
 <%@page pageEncoding="utf-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -10,13 +11,17 @@
     <body class="index">
         <!--导航区域开始-->
         <div id="index_navi">
-          <%@include file="../menu.jsp" %>
+        		<!-- include引入其他页面，是
+        			纯本地化的引用，不是从网络
+        			上引用，所以是相对路径的关系
+        			是本地的相对关系。 -->
+        		<%-- 
+            <%@include file="../nav.jsp"%>
+            --%>
+            <c:import url="../nav.jsp"></c:import>
         </div>
     </body>
 </html>
-
-
-
 
 
 

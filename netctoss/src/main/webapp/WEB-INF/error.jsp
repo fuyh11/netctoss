@@ -4,6 +4,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>达内－NetCTOSS</title>
+        <!-- 
+        	 当前：/netctoss/bill/bill_list.html
+        	      /netctoss/billFind.do
+        	 目标：/netctoss/styles/x.css
+        -->
         <link type="text/css" rel="stylesheet" media="all" href="styles/global.css" />
         <link type="text/css" rel="stylesheet" media="all" href="styles/global_color.css" />
         <script language="javascript" type="text/javascript">
@@ -21,7 +26,8 @@
                 }
                 else {
                     window.clearInterval(timer);
-                    location.href = "/netctoss/toLogin.do";
+                    //location.href = "login.html";
+                    history.back();
                 }
             }
 
@@ -29,7 +35,8 @@
             function resetTimer() {
                 if (timer != null && timer != undefined) {
                     window.clearInterval(timer);
-                    location.href = "/netctoss/toLogin.do";
+                    //location.href = "login.html";
+                    history.back();
                 }
             }
         </script> 

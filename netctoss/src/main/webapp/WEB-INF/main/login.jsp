@@ -9,7 +9,7 @@
     </head>
     <body class="index">
         <div class="login_box">
-        	 <form action="login.do" method="post">
+        	<form action="login.do" method="post">
             <table>
                 <tr>
                     <td class="login_info">账号：</td>
@@ -24,18 +24,13 @@
                 <tr>
                     <td class="login_info">验证码：</td>
                     <td class="width70"><input name="code" type="text" class="width70" /></td>
-                    <td><img src="createImg.do" onclick="this.setAttribute('src','createImg.do?x='+Math.random());" alt="验证码" title="点击更换" /></td>  
+                    <td><img src="createImg.do" onclick="this.src='createImg.do?x='+Math.random();" alt="验证码" title="点击更换" /></td>  
                     <td><span class="required"></span></td>              
                 </tr>            
                 <tr>
                     <td></td>
                     <td class="login_button" colspan="2">
-                    		<!-- 
-                    			表单提交的方式:
-                    			1.点击submit按钮,触发表单的onsubmit事件
-                    			2.通过js调用表单的submit()
-                    		 -->
-                        <a href="javascript:document.forms[0].submit();"><img src="images/login_btn.png" /></a>
+                    	 <a href="javascript:document.forms[0].submit();"><img src="images/login_btn.png" /></a>
                     </td>    
                     <td><span class="required">${error }</span></td>                
                 </tr>

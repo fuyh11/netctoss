@@ -1,10 +1,15 @@
 <%@page pageEncoding="utf-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>达内－NetCTOSS</title>
+        <!-- 
+        	当前：/netctoss/findCost.do
+        	目标：/netctoss/images/logo.png
+        -->
         <link type="text/css" rel="stylesheet" media="all" href="styles/global.css" />
         <link type="text/css" rel="stylesheet" media="all" href="styles/global_color.css" />
         <script language="javascript" type="text/javascript">
@@ -22,8 +27,11 @@
                 document.getElementById("operate_result_info").style.display = "block";
             }
             //删除
-            function deleteFee() {
+            function deleteFee(id) {
                 var r = window.confirm("确定要删除此资费吗？");
+                if(r) {
+                	location.href = "deleteCost.do?id="+id;
+                }
             }
         </script>        
     </head>
@@ -31,23 +39,14 @@
         <!--Logo区域开始-->
         <div id="header">
             <img src="images/logo.png" alt="logo" class="left"/>
+            <c:import url="../logo.jsp"></c:import>
             <a href="#">[退出]</a>            
         </div>
         <!--Logo区域结束-->
         <!--导航区域开始-->
         <div id="navi">                        
-            <ul id="menu">
-                <li><a href="../index.html" class="index_off"></a></li>
-                <li><a href="../role/role_list.html" class="role_off"></a></li>
-                <li><a href="../admin/admin_list.html" class="admin_off"></a></li>
-                <li><a href="../fee/fee_list.html" class="fee_off"></a></li>
-                <li><a href="../account/account_list.html" class="account_off"></a></li>
-                <li><a href="../service/service_list.html" class="service_off"></a></li>
-                <li><a href="../bill/bill_list.html" class="bill_off"></a></li>
-                <li><a href="../report/report_list.html" class="report_off"></a></li>
-                <li><a href="../user/user_info.html" class="information_off"></a></li>
-                <li><a href="../user/user_modi_pwd.html" class="password_off"></a></li>
-            </ul>            
+        	 <%--<%@include file="../nav.jsp"%>--%>
+        	 <c:import url="../nav.jsp"></c:import>           
         </div>
         <!--导航区域结束-->
         <!--主要区域开始-->
@@ -81,23 +80,23 @@
                             <th class="width50">状态</th>
                             <th class="width200"></th>
                         </tr>                      
-                        <c:forEach items="${costs }" var="c">
+                        <c:forEach items="${costs}" var="c">
                         <tr>
-                            <td>${c.costId }</td>
-                            <td><a href="fee_detail.html">${c.name }</a></td>
-                            <td>${c.baseDuration }</td>
-                            <td>${c.baseCost }</td>
-                            <td>${c.unitCost }</td>
-                            <td>${c.creatime }</td>
-                            <td>${c.startime }</td>
+                            <td>${c.costId}</td>
+                            <td><a href="fee_detail.html">${c.name}</a></td>
+                            <td>${c.baseDuration}</td>
+                            <td>${c.baseCost}</td>
+                            <td>${c.unitCost}</td>
+                            <td><fmt:formatDate value="${c.creatime}" pattern="yyyy/MM/dd"/></td>
+                            <td><fmt:formatDate value="${c.startime}" pattern="yyyy/MM/dd"/></td>
                             <td>
-                            	<c:if test="${c.status==0 }">开通</c:if>
-                            	<c:if test="${c.status==1 }">暂停</c:if>
+                            	<c:if test="${c.status=='0'}">开通</c:if>
+                            	<c:if test="${c.status=='1'}">暂停</c:if>
                             </td>
                             <td>                                
                                 <input type="button" value="启用" class="btn_start" onclick="startFee();" />
-                                <input type="button" value="修改" class="btn_modify" onclick="location.href='fee_modi.html';" />
-                                <input type="button" value="删除" class="btn_delete" onclick="deleteFee();" />
+                                <input type="button" value="修改" class="btn_modify" onclick="location.href='toUpdateCost.do?id=${c.costId}';" />
+                                <input type="button" value="删除" class="btn_delete" onclick="deleteFee(${c.costId});" />
                             </td>
                         </tr>
                         </c:forEach>
@@ -111,13 +110,36 @@
                 </div>
                 <!--分页-->
                 <div id="pages">
-        	        <a href="#">上一页</a>
-                    <a href="#" class="current_page">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">下一页</a>
+                 <!-- 当前是第1页，则不能点上一页 -->
+                 <c:if test="${page==1 }">
+                 	 <a href="">上一页</a>
+                 </c:if>
+                 <c:if test="${page!=1 }">
+	     	        	  <a href="findCost.do?page=${page-1 }">上一页</a>
+                 </c:if>
+                 
+                 <!-- 
+                 	begin：循环起始位置；
+                 	end：循环终止位置；
+                 -->
+                 <c:forEach begin="1" end="${total }" var="i">
+                 	 <!-- 若循环到了当前页，则将页码高亮显示 -->
+                 	 <c:if test="${i==page }">
+                 	 	<a href="findCost.do?page=${i }" class="current_page">${i }</a>
+                 	 </c:if>
+                   <!-- 若不是当前页，则去掉高亮的样式 -->
+                   <c:if test="${i!=page }">
+                   	<a href="findCost.do?page=${i }">${i }</a>
+                   </c:if>
+                 </c:forEach>
+                 
+                 <!-- 当前页是最后一页，则不能点下一页 -->
+                 <c:if test="${page==total }">
+                 	 <a href="">下一页</a>
+                 </c:if>
+                 <c:if test="${page!=total }">
+	                 <a href="findCost.do?page=${page+1 }">下一页</a>
+                 </c:if>
                 </div>
             </form>
         </div>
